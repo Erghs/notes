@@ -1,16 +1,24 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useContext, useEffect } from 'react'
 import { Form } from '../components/Form'
 import { Note } from './../components/Note';
+import {FirebaseContext} from '../Context/firebase/firebaseContext'
+import {Loader} from '../components/Loader'
 
 export const Nodes=()=>{
-    const notes=new Array(3)
-    .fill('')
-    .map((_,i)=>({id:1,title:`Note ${i+1}`}))
+    const {loading, notes, fetchNotes, removeNote} = useContext(FirebaseContext)
+
+  useEffect(() => {
+    fetchNotes()
+    // eslint-disable-next-line
+  }, [])
     return(
     <Fragment>
          {<Form/>}
          <hr />
-         {<Note notes={notes}/>}
+         {loading
+        ? <Loader />
+        : <Nodes notes={notes} onRemove={removeNote} />
+      }
     </Fragment>
     )
 }
